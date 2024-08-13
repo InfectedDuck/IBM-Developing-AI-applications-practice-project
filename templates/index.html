@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NLP Sentiment Analysis</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script>
+        function RunSentimentAnalysis() {
+            var text = document.getElementById('textToAnalyze').value;
+            if (text.trim() === "") {
+                alert("Please enter some text.");
+                return;
+            }
+            
+            fetch('/sentimentAnalyzer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ textToAnalyze: text })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('system_response').innerHTML = data.result;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('system_response').innerHTML = "An error occurred while processing the request.";
+            });
+        }
+    </script>
+    <style>
+        .center-heading {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="card-body">
+            <h1 class="center-heading">NLP - Sentiment Analysis using BERT</h1>
+            <div style="padding: 25px;">
+                <h2 class="mb-3">
+                    <label class="form-label">Please enter the text to be analyzed</label>
+                    <textarea class="form-control" id="textToAnalyze"></textarea>
+                </h2>
+
+                <div style="padding: 25px;">
+                    <button onclick="RunSentimentAnalysis()" class="btn btn-secondary">Run Sentiment Analysis</button>
+                </div>
+                <h2 class="mb-3">
+                    <label class="form-label">Result of Sentiment Analysis</label>
+                </h2>
+                <div id="system_response" style="padding: 25px;"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
